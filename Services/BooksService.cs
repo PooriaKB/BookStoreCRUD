@@ -40,4 +40,11 @@ public class BooksService : IBooksService
 
 
     }
+
+    public List<BookResponse> GetAllBooks()
+    {
+        return _books.Select(book => book.ToBookResponse()).ToList();
+    }
+    
+    // TODO: Implementing GetBookByID & DeleteBook & UpdateBook
 }

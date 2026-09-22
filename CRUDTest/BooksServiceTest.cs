@@ -1,15 +1,19 @@
 ﻿using Contracts;
 using Contracts.DTOs;
 using Services;
+using FluentAssertions;
+using AutoFixture;
 
 namespace CRUDTest;
 
 public class BooksServiceTest
 {
     private readonly IBooksService _booksService;
+    private readonly IFixture _fixture;
 
     public BooksServiceTest()
     {
+        _fixture = new Fixture();
         _booksService = new BooksService();
     }
     
@@ -19,50 +23,107 @@ public class BooksServiceTest
     [Fact]
     public void AddBook_NullBook()
     {
+        // Arrange
         BookAddRequest? req = null;
-
-        Assert.Throws<ArgumentNullException>(() =>
-            _booksService.AddBook(req)
-        );
+        
+        // Act
+        Func<BookResponse> action = () => _booksService.AddBook(req);
+        
+        // Assert
+        action.Should().Throw<ArgumentNullException>();
     }
     
     // When BookName is null, it should throw ArgumentException
     [Fact]
     public void AddBook_NullBookName()
     {
-        BookAddRequest? req = new BookAddRequest(){BookName = null};
+        // Arrange
+        BookAddRequest? req = _fixture.Build<BookAddRequest>()
+            .With(tmp => tmp.BookName, null as string).Create();
+        // Act
+        Func<BookResponse> action = () => _booksService.AddBook(req);
         
-        Assert.Throws<ArgumentException>(
-            () =>
-            _booksService.AddBook(req)
-            );
+        // Assert
+        action.Should().Throw<ArgumentException>();
     }
     
     // When BookName is duplicate, it should throw ArgumentException
     [Fact]
     public void AddBook_DuplicateBookName()
     {
-        BookAddRequest req1 = new BookAddRequest(){BookName = "The Little Prince"};
-        BookAddRequest req2 = new BookAddRequest(){BookName = "The Little Prince"};
+        // Arrange
+        BookAddRequest req1 = _fixture.Build<BookAddRequest>()
+            .With(tmp => tmp.BookName, "The Little Prince").Create();
+        BookAddRequest req2 = _fixture.Build<BookAddRequest>()
+            .With(tmp => tmp.BookName, req1.BookName).Create();
 
-        Assert.Throws<ArgumentException>(() =>
+        // Act
+         var action = () =>
         {
             _booksService.AddBook(req1);
             _booksService.AddBook(req2);
-        });
+        };
+        
+        action.Should().Throw<ArgumentException>();
 
     }
     
-    // When supplying propper BookName, it should add the Book to 
+    // When supplying propper Book detail, it should add the Book to 
     [Fact]
     public void AddBook_ValidBook()
     {
-        BookAddRequest req = new BookAddRequest(){BookName = "The Little Prince"};
+        // Arrange
+        BookAddRequest req = _fixture.Create<BookAddRequest>();
         
+        // Act
         BookResponse response = _booksService.AddBook(req);
+        List<BookResponse> actualBookResponseList = _booksService.GetAllBooks();
         
-        Assert.True(response.BookId != Guid.Empty);
+        // Assert
+        response.BookId.Should().NotBe(Guid.Empty);
+        actualBookResponseList.Should().Contain(response);
     }
     #endregion
+    
+    #region GetAllBook
+    
+    // Before adding any Books the list of books should be empty by default
+    [Fact]
+    public void GetAllBooks_EmptyList()
+    {
+        // Act
+        List<BookResponse> actualBookResponseList = _booksService.GetAllBooks();
+        
+        // Assert
+        actualBookResponseList.Should().BeEmpty();
+        
+    }
+    
+    // When the list contains books, it should return all of them
+    [Fact]
+    public void GetAllBooks_ValidList()
+    {
+        // Arrange
+        List<BookAddRequest> bookAddRequestList = _fixture.Create<List<BookAddRequest>>();
+
+        List<BookResponse> bookResponseListFormAdd = new List<BookResponse>();
+        foreach (BookAddRequest bookAddRequest in bookAddRequestList)
+        {
+            BookResponse addedBook = _booksService.AddBook(bookAddRequest);
+            
+            bookResponseListFormAdd.Add(addedBook);
+        }
+        
+        // Act
+        List<BookResponse> actualBookResponseList = _booksService.GetAllBooks();
+        
+        // Assert
+        actualBookResponseList.Should().BeEquivalentTo(bookResponseListFormAdd);
+        
+    }
+    
+    #endregion
+    
+    // TODO: Defining GetBookByID & DeleteBook & UpdateBook tests
     
 }
