@@ -85,7 +85,7 @@ public class BooksServiceTest
     }
     #endregion
     
-    #region GetAllBook
+    #region GetAllBooks
     
     // Before adding any Books the list of books should be empty by default
     [Fact]
@@ -124,6 +124,35 @@ public class BooksServiceTest
     
     #endregion
     
-    // TODO: Defining GetBookByID & DeleteBook & UpdateBook tests
+    #region GetBookById
+    
+    // If the given id is null the response should be null
+    [Fact]
+    public void GetBookById_NullBookId()
+    {
+        // Act
+        BookResponse? responseFromGet = _booksService.GetBookById(null);
+        
+        // Assert
+        responseFromGet.Should().BeNull();
+    }
+    
+    // If the given id is a valid one, it should return the matching country details
+    [Fact]
+    public void GetBookById_ValidBookId()
+    {
+        // Arrange
+        BookAddRequest req = _fixture.Create<BookAddRequest>();
+        BookResponse responseFromAdd = _booksService.AddBook(req);
+        
+        // Act
+        BookResponse? responseFromGet = _booksService.GetBookById(responseFromAdd.BookId);
+        
+        // Assert
+        responseFromGet.Should().BeEquivalentTo(responseFromAdd);
+    }
+    
+    #endregion
+    // TODO: DeleteBook & UpdateBook tests
     
 }

@@ -43,8 +43,18 @@ public class BooksService : IBooksService
 
     public List<BookResponse> GetAllBooks()
     {
-        return _books.Select(book => book.ToBookResponse()).ToList();
+        return _books.Select(temp => temp.ToBookResponse()).ToList();
     }
-    
-    // TODO: Implementing GetBookByID & DeleteBook & UpdateBook
+
+    public BookResponse? GetBookById(Guid? id)
+    {
+        if(id == null)
+            return null;
+        
+        Book? desiredBook = _books.FirstOrDefault(temp => temp.BookId == id);
+        
+        return desiredBook?.ToBookResponse();
+    }
+
+    // TODO: DeleteBook & UpdateBook
 }

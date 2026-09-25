@@ -16,6 +16,15 @@ public interface IBooksService
     /// </summary>
     /// <returns> All Books from the memory/DB as a list of BookResponse</returns>
     public List<BookResponse> GetAllBooks();
-    
-    // TODO: Defining GetBookByID & DeleteBook & UpdateBook
+
+    /// <summary>
+    /// Returns a Book by its ID
+    /// </summary>
+    /// <param name="id">The ID of the wanted book</param>
+    /// <returns>The specific book that has the given id</returns>
+    public BookResponse? GetBookById(Guid? id);
+
+    // TODO: Defining DeleteBook & UpdateBook
+
+
 }
