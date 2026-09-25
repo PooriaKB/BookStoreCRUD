@@ -68,7 +68,7 @@ public class BooksServiceTest
 
     }
     
-    // When supplying propper Book detail, it should add the Book to 
+    // When supplying propper Book detail, it should add the Book
     [Fact]
     public void AddBook_ValidBook()
     {
@@ -137,7 +137,20 @@ public class BooksServiceTest
         responseFromGet.Should().BeNull();
     }
     
-    // If the given id is a valid one, it should return the matching country details
+    // If the given id is an invalid id, it should return null
+    [Fact]
+    public void GetBookById_InvalidBookId()
+    {
+        // Act
+        BookResponse? responseFromGet = _booksService.GetBookById(new Guid());
+        
+        // Assert
+        responseFromGet.Should().BeNull();
+        
+        
+    }
+    
+    // If the given id is a valid one, it should return the matching book details
     [Fact]
     public void GetBookById_ValidBookId()
     {

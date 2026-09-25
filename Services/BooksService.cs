@@ -53,6 +53,9 @@ public class BooksService : IBooksService
         
         Book? desiredBook = _books.FirstOrDefault(temp => temp.BookId == id);
         
+        if(desiredBook == null)
+            return null;
+        
         return desiredBook?.ToBookResponse();
     }
 
