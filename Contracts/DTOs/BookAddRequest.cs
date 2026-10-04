@@ -8,23 +8,25 @@ namespace Contracts.DTOs;
 public class BookAddRequest
 {
     [Length(2,100)]
+    [Required(ErrorMessage = "book name can't be empty")]
     public string? BookName { get; set; }
-
+    
+    [DataType(DataType.Date)]
     public DateTime? ReleaseDate { get; set; }
     
     public List<string>? AuthorsName { get; set; }
     
-    [Range(0,1000)]
-    public double? Price { get; set; }
-
+    /// <summary>
+    ///  Convert current obj of BookAddRequest to Book obj
+    /// </summary>
+    /// <returns>Book obj form convert</returns>
     public Book ToBook()
     {
         return new Book()
         {
             BookName = BookName,
             AuthorsName = AuthorsName,
-            ReleaseDate = ReleaseDate,
-            Price = Price
+            ReleaseDate = ReleaseDate
         };
     }
     

@@ -8,7 +8,7 @@ public interface IBooksService
     /// Adds a Book obj to the list of Books
     /// </summary>
     /// <param name="request">Book obj to add</param>
-    /// <returns>Returns the added book obj with its ID</returns>
+    /// <returns>Returns the added book obj as a BookResponse</returns>
     public BookResponse AddBook(BookAddRequest? request);
     
     /// <summary>
