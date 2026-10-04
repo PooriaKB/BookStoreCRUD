@@ -3,7 +3,7 @@
 namespace Entities;
 
 /// <summary>
-/// Domain Model for Book
+/// Domain Model for Books
 /// </summary>
 public class Book
 {

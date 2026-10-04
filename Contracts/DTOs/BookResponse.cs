@@ -19,7 +19,7 @@ public class BookResponse
     /// <returns>True or False, indicating weather all book details are equal with the parameter</returns>
     public override bool Equals(object? obj)
     {
-        if( obj == null || GetType() != obj.GetType() )
+        if( obj == null || obj.GetType() != typeof(BookResponse) )
             return false;
         
         BookResponse bookResponse = (BookResponse)obj;
@@ -35,7 +35,9 @@ public class BookResponse
 }
 
 
-// For converting from Book obj to BookResponse
+/// <summary>
+/// For converting from Book obj to BookResponse obj
+/// </summary>
 public static class BookToBookResponseExtensions
 {
     /// <summary>
@@ -43,14 +45,12 @@ public static class BookToBookResponseExtensions
     /// </summary>
     /// <param name="book">The Book for converting</param>
     /// <returns>Converted BookResponse Obj</returns>
-    public static BookResponse ToBookResponse(this Book book)
-    {
-        return new BookResponse
+    public static BookResponse ToBookResponse(this Book book) => new BookResponse()
         {
             BookId = book.BookId,
             BookName = book.BookName,
             ReleaseDate = book.ReleaseDate,
             AuthorsName = book.AuthorsName,
         };
-    }
+    
 }

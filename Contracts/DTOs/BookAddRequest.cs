@@ -20,14 +20,12 @@ public class BookAddRequest
     ///  Convert current obj of BookAddRequest to Book obj
     /// </summary>
     /// <returns>Book obj form convert</returns>
-    public Book ToBook()
+    public Book ToBook() => new Book()
     {
-        return new Book()
-        {
             BookName = BookName,
             AuthorsName = AuthorsName,
             ReleaseDate = ReleaseDate
-        };
-    }
+    };
+    
     
 }
